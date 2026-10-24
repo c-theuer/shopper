@@ -1,6 +1,10 @@
 # Infrastructure
 
-Terraform for GCP project `shopper-511919` (region `us-central1`).
+Terraform for a GCP project of your choice (region `us-central1`). Set your project ID once in your shell; the commands below use it:
+
+```bash
+export PROJECT_ID=your-gcp-project-id
+```
 
 ```
 Browser ──> IAP ──> Cloud Run: shopper-frontend (React + Node proxy, public ingress)
@@ -19,18 +23,20 @@ Browser ──> IAP ──> Cloud Run: shopper-frontend (React + Node proxy, pub
 ## One-time setup
 
 ```bash
-gcloud storage buckets create gs://shopper-511919-tfstate \
-  --project shopper-511919 --location us-central1 \
+gcloud storage buckets create gs://$PROJECT_ID-tfstate \
+  --project $PROJECT_ID --location us-central1 \
   --uniform-bucket-level-access --public-access-prevention
-gcloud storage buckets update gs://shopper-511919-tfstate --versioning
+gcloud storage buckets update gs://$PROJECT_ID-tfstate --versioning
 
-cp infra/terraform/terraform.tfvars.example infra/terraform/terraform.tfvars
+cp infra/terraform/terraform.tfvars.example infra/terraform/terraform.tfvars   # then set project_id and app_users
 ```
+
+To run Terraform by hand, initialize it with the state bucket: `terraform init -backend-config="bucket=$PROJECT_ID-tfstate"`.
 
 ## Deploy
 
 ```bash
-scripts/deploy.sh
+PROJECT_ID=your-gcp-project-id scripts/deploy.sh
 ```
 
 This builds both images for `linux/amd64`, pushes them to Artifact Registry, and runs `terraform apply`. The first apply takes about 15 minutes, mostly Cloud SQL creation.
@@ -40,7 +46,7 @@ This builds both images for `linux/amd64`, pushes them to Artifact Registry, and
 The project belongs to a Google Cloud organization. IAP's default Google-managed OAuth client only admits accounts inside that organization. If your account is external (for example, a personal Gmail account), set up a custom OAuth client with an external audience once:
 
 1. Console → Google Auth Platform → create an OAuth client (Web application). Use audience **External**.
-2. `gcloud iap settings set --project shopper-511919 --resource-type=cloud-run --service=shopper-frontend --region=us-central1 <settings.yaml>`, with the client ID and secret in `settings.yaml` (see the [IAP for Cloud Run docs](https://docs.cloud.google.com/run/docs/securing/identity-aware-proxy-cloud-run)).
+2. `gcloud iap settings set --project $PROJECT_ID --resource-type=cloud-run --service=shopper-frontend --region=us-central1 <settings.yaml>`, with the client ID and secret in `settings.yaml` (see the [IAP for Cloud Run docs](https://docs.cloud.google.com/run/docs/securing/identity-aware-proxy-cloud-run)).
 
 ## Local development
 

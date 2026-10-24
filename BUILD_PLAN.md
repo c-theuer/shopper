@@ -1,7 +1,7 @@
 # AI Shopping Assistant: Build Plan
 
 Source: [AI Shopping Assistant PRD](https://docs.google.com/document/d/1OZ9wW5uGahWtGlzvbe6lg0rpew4Cyqpw/edit) (Draft)
-GCP project: `shopper-511919`
+GCP project: set by the `project_id` Terraform variable and the `PROJECT_ID` deploy variable (see `infra/README.md`)
 
 ## Current state: clickable demo
 

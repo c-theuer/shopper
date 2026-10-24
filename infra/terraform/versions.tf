@@ -16,9 +16,9 @@ terraform {
     }
   }
 
-  # Create the bucket once before `terraform init` (see infra/README.md).
+  # Create the bucket once before `terraform init` (see infra/README.md). Backends can't use variables,
+  # so the bucket is passed at init: terraform init -backend-config="bucket=<project_id>-tfstate"
   backend "gcs" {
-    bucket = "shopper-511919-tfstate"
     prefix = "shopper"
   }
 }
