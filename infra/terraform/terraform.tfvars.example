@@ -1,0 +1,4 @@
+app_users = ["user:catherine.p.theuer@gmail.com"]
+
+# Optional: enables Claude for clarifying questions and product choice.
+# anthropic_api_key = "sk-ant-..."
